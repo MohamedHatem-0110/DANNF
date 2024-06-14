@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DANNF App</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="card" id="firstCard">
+      <h2>Please Enter your Email:</h2>
+      <input id="emailInput" type="text" />
+      <button id="sendCodeButton">Continue</button>
+    </div>
+
+    <div class="card" id="secondCard">
+      <h2>Please Re-enter your Email:</h2>
+      <input id="emailInput" type="text" />
+      <h2>Please Enter the verification code:</h2>
+      <input id="verificationCodeInput" type="text" />
+      <button id="verifyButton">Verify</button>
+    </div>
+
+    <div id="spinner">
+      <div class="bounce1"></div>
+      <div class="bounce2"></div>
+      <div class="bounce3"></div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
