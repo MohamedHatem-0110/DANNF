@@ -43,7 +43,7 @@ app.post("/register", async (req, res) => {
   const verificationCode = generateVerificationCode();
   try {
     const newUser = await new User({ email, verificationCode });
-    console.log(newUser);
+
     await newUser.save();
 
     const emailInfo = await transporter.sendMail({
@@ -52,8 +52,6 @@ app.post("/register", async (req, res) => {
       subject: "DANNF: Your Verification Code",
       text: `Your verification code is: ${verificationCode}`,
     });
-
-    console.log(emailInfo);
 
     res.status(201).json({
       message: "User registered! Verification code sent.",
@@ -64,16 +62,17 @@ app.post("/register", async (req, res) => {
 });
 
 app.patch("/verify", async (req, res) => {
-  const { inputCode, email } = req.body;
+  const { verificationCode, email } = req.body;
 
   try {
     const user = await User.findOne({ email });
-    console.log(inputCode === user.verificationCode);
-    if (inputCode === user.verificationCode) {
+    if (verificationCode === user.verificationCode) {
       await User.findOneAndUpdate({ email }, { isVerified: true });
       res.status(200).json({ verified: true });
     } else {
-      res.status(400).json({ message: "Incorrect verification code" });
+      res
+        .status(400)
+        .json({ message: "Incorrect verification code", verified: false });
     }
   } catch (error) {
     res.status(500).json({ message: "Failed to verify" });
@@ -85,13 +84,22 @@ app.patch("/complete-registration", async (req, res) => {
     const { email, mobileNumber, fullName, nationalID, motorcycleNumber } =
       req.body;
 
+    if (
+      !email ||
+      !mobileNumber ||
+      !fullName ||
+      !nationalID ||
+      !motorcycleNumber
+    ) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
     const user = await User.findOneAndUpdate(
       { email },
       { mobileNumber, fullName, nationalID, motorcycleNumber }
     );
-    console.log(req.body);
 
-    res.status(200).json({ message: "Information added successfully!", user });
+    res.status(200).json({ message: "Information saved successfully!", user });
   } catch (error) {
     res.status(500).json({ message: error });
   }
